@@ -4,7 +4,7 @@ from django.template import loader
 from django.db import models
 from django.core.cache import cache
 from mezzanine.utils.urls import slugify
-from mezzanine_blocks.models import Block
+from mezzanine_blocks.models import Block, RichBlock
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -63,17 +63,19 @@ class BasicFlatBlockWrapper(object):
                 template_name=self.tpl_name,
                 tpl_is_variable=self.tpl_is_variable)
 
-class PlainFlatBlockWrapper(BasicFlatBlockWrapper):
+class RichFlatBlockWrapper(BasicFlatBlockWrapper):
     def __call__(self, parser, token):
         self.prepare(parser, token)
-        return FlatBlockNode(self.slug, self.is_variable, self.cache_time, False)
+        return FlatBlockNode(self.slug, self.is_variable, self.cache_time,
+                template_name=self.tpl_name,
+                tpl_is_variable=self.tpl_is_variable, is_rich=True)
 
 do_get_flatblock = BasicFlatBlockWrapper()
-do_plain_flatblock = PlainFlatBlockWrapper()
+do_rich_flatblock = RichFlatBlockWrapper()
 
 class FlatBlockNode(template.Node):
     def __init__(self, slug, is_variable, cache_time=0, with_template=True,
-            template_name=None, tpl_is_variable=False):
+            template_name=None, tpl_is_variable=False, is_rich=False):
         if template_name is None:
             self.template_name = 'mezzanine_blocks/block.html'
         else:
@@ -85,6 +87,7 @@ class FlatBlockNode(template.Node):
         self.is_variable = is_variable
         self.cache_time = cache_time
         self.with_template = with_template
+        self.is_rich = is_rich
 
     def render(self, context):
         if self.is_variable:
@@ -111,13 +114,23 @@ class FlatBlockNode(template.Node):
                 # safe and convenient to auto-create block if it doesn't exist.
                 # This behaviour can be configured using the
                 # FLATBLOCKS_AUTOCREATE_STATIC_BLOCKS setting
-                if self.is_variable:
-                    flatblock = Block.objects.get(slug=real_slug)
+                if self.is_rich:
+                    if self.is_variable:
+                        flatblock = RichBlock.objects.get(slug=real_slug)
+                    else:
+                        flatblock, _ = RichBlock.objects.get_or_create(
+                                          title=real_slug,
+                                          defaults = {'content': real_slug}
+                                       )
                 else:
-                    flatblock, _ = Block.objects.get_or_create(
-                                      title=real_slug,
-                                      defaults = {'content': real_slug}
-                                   )
+                    if self.is_variable:
+                        flatblock = Block.objects.get(slug=real_slug)
+                    else:
+                        flatblock, _ = Block.objects.get_or_create(
+                                          title=real_slug,
+                                          defaults = {'content': real_slug}
+                                       )
+
                 if self.cache_time != 0:
                     if self.cache_time is None or self.cache_time == 'None':
                         logger.debug("Caching %s for the cache's default timeout"
@@ -140,4 +153,4 @@ class FlatBlockNode(template.Node):
             return ''
 
 register.tag('flatblock', do_get_flatblock)
-register.tag('plain_flatblock', do_plain_flatblock)
+register.tag('richflatblock', do_rich_flatblock)
