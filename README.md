@@ -1,7 +1,7 @@
 Overview
 ========
 A mezzanine flavored fork of [django-flatblocks] [1].
-The goal of this project is to be able to easily create custom blocks of HTML
+The goal of this project is to be able to easily create custom blocks of text/HTML
 in the template, and can be editable via admin.
 
 [1]: https://github.com/zerok/django-flatblocks/ "django-flatblocks"
