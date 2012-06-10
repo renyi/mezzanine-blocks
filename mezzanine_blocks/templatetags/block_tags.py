@@ -119,16 +119,16 @@ class FlatBlockNode(template.Node):
                         flatblock = RichBlock.objects.get(slug=real_slug)
                     else:
                         flatblock, _ = RichBlock.objects.get_or_create(
-                                          title=real_slug,
-                                          defaults = {'content': real_slug}
+                                          slug=real_slug,
+                                          defaults = {'title': real_slug}
                                        )
                 else:
                     if self.is_variable:
                         flatblock = Block.objects.get(slug=real_slug)
                     else:
                         flatblock, _ = Block.objects.get_or_create(
-                                          title=real_slug,
-                                          defaults = {'content': real_slug}
+                                          slug=real_slug,
+                                          defaults = {'title': real_slug}
                                        )
 
                 if self.cache_time != 0:
