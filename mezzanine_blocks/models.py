@@ -12,7 +12,7 @@ class BaseBlock(Slugged):
 
     def save(self, *args, **kwargs):
         super(BaseBlock, self).save(*args, **kwargs)
-        cache.delete('%s%s' % ('mezzanine_blocks', self.slug, ))
+        cache.delete('%s%s' % ('mezzanine_blocks', self.slug))
 
     class Meta:
         abstract = True
