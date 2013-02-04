@@ -4,7 +4,7 @@ from django.template import loader
 from django.db import models
 from django.core.cache import cache
 from mezzanine.utils.urls import slugify
-from mezzanine_blocks.models import Block, RichBlock
+from mezzanine_blocks.models import Block, RichBlock, ImageBlock
 
 register = template.Library()
 logger = logging.getLogger(__name__)
@@ -70,14 +70,25 @@ class RichFlatBlockWrapper(BasicFlatBlockWrapper):
                 template_name=self.tpl_name,
                 tpl_is_variable=self.tpl_is_variable, is_rich=True)
 
+class ImageFlatBlockWrapper(BasicFlatBlockWrapper):
+    def __call__(self, parser, token):
+        self.prepare(parser, token)
+        return FlatBlockNode(self.slug, self.is_variable, self.cache_time,
+                template_name=self.tpl_name,
+                tpl_is_variable=self.tpl_is_variable, is_image=True)
+
 do_get_flatblock = BasicFlatBlockWrapper()
 do_rich_flatblock = RichFlatBlockWrapper()
+do_image_flatblock = ImageFlatBlockWrapper()
 
 class FlatBlockNode(template.Node):
     def __init__(self, slug, is_variable, cache_time=0, with_template=True,
-            template_name=None, tpl_is_variable=False, is_rich=False):
+            template_name=None, tpl_is_variable=False, is_rich=False, is_image=False):
         if template_name is None:
-            self.template_name = 'mezzanine_blocks/block.html'
+            if is_image:
+                self.template_name = 'mezzanine_blocks/image_block.html'
+            else:
+                self.template_name = 'mezzanine_blocks/block.html'
         else:
             if tpl_is_variable:
                 self.template_name = template.Variable(template_name)
@@ -88,6 +99,7 @@ class FlatBlockNode(template.Node):
         self.cache_time = cache_time
         self.with_template = with_template
         self.is_rich = is_rich
+        self.is_image = is_image
 
     def render(self, context):
         if self.is_variable:
@@ -122,6 +134,14 @@ class FlatBlockNode(template.Node):
                                           slug=slugify(real_slug),
                                           defaults = {'title': real_slug}
                                        )
+                elif self.is_image:
+                    if self.is_variable:
+                        flatblock = ImageBlock.objects.get(slug=real_slug)
+                    else:
+                        flatblock, _ = ImageBlock.objects.get_or_create(
+                                          slug=slugify(real_slug),
+                                          defaults = {'title': real_slug}
+                                       )                        
                 else:
                     if self.is_variable:
                         flatblock = Block.objects.get(slug=real_slug)
@@ -154,3 +174,4 @@ class FlatBlockNode(template.Node):
 
 register.tag('flatblock', do_get_flatblock)
 register.tag('richflatblock', do_rich_flatblock)
+register.tag('imageflatblock', do_rich_flatblock)

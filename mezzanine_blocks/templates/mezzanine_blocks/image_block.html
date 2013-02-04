@@ -1,0 +1,12 @@
+{% extends "mezzanine_blocks/block.html" %}
+{% load mezzanine_tags %}
+
+
+{% block block_content %}
+asd
+    {% editable flatblock.image %}
+    <a href="{{ flatblock.get_url }}" rel="nofollow">
+        <img src="{{ flatblock.get_thumb_url }}">
+    </a>
+    {% endeditable %}
+{% endblock %}

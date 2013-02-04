@@ -1,5 +1,6 @@
 {% load mezzanine_tags %}
 
+
 {% if flatblock.content %}
 {% if not flatblock.login_required or flatblock.login_required and user.is_authenticated %}
 <div class="flatblock block-{{ flatblock.slug }}">
@@ -8,9 +9,11 @@
     <h2 class="title">{{ flatblock.title }}</h2>
     {% endeditable %}
     {% endif %}
+    {% block block_content %}
     {% editable flatblock.content %}
     <div class="content">{{ flatblock.content|richtext_filter|safe }}</div>
     {% endeditable %}
+    {% endblock %}
 </div>
 {% endif %}
 {% endif %}
