@@ -106,7 +106,7 @@ class FlatBlockNode(template.Node):
         try:
             flatblock = None
             if self.cache_time != 0:
-                cache_key = 'mezzanine_blocks' + real_slug
+                cache_key = 'mezzanine_blocks.' + real_slug
                 flatblock = cache.get(cache_key)
             if flatblock is None:
 
@@ -119,7 +119,7 @@ class FlatBlockNode(template.Node):
                         flatblock = RichBlock.objects.get(slug=real_slug)
                     else:
                         flatblock, _ = RichBlock.objects.get_or_create(
-                                          slug=real_slug,
+                                          slug=slugify(real_slug),
                                           defaults = {'title': real_slug}
                                        )
                 else:
@@ -127,7 +127,7 @@ class FlatBlockNode(template.Node):
                         flatblock = Block.objects.get(slug=real_slug)
                     else:
                         flatblock, _ = Block.objects.get_or_create(
-                                          slug=real_slug,
+                                          slug=slugify(real_slug),
                                           defaults = {'title': real_slug}
                                        )
 
