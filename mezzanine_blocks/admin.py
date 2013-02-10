@@ -76,7 +76,7 @@ class RichBlockAdmin(admin.ModelAdmin):
 class ImageBlockAdmin(admin.ModelAdmin):
     ordering = ('title', 'category')
     list_display = ('admin_thumb', 'title', 'category', 'height', 'width', 'quality', 'login_required', 'show_title')
-    list_display_link = ('admin_thumb', 'title')
+    list_display_links = ('admin_thumb', 'title')
     list_editable = ('login_required', 'show_title', 'category', 'height', 'width', 'quality')
     search_fields = ('title', 'description', 'url')
 
