@@ -3,10 +3,15 @@
 
 
 {% block block_content %}
-asd
     {% editable flatblock.image %}
-    <a href="{{ flatblock.get_url }}" rel="nofollow">
-        <img src="{{ flatblock.get_thumb_url }}">
-    </a>
+    <div class="content-image">
+        {% if flatblock.get_url %}
+        <a href="{{ flatblock.get_url }}" rel="nofollow">
+            <img src="{{ flatblock.get_thumb_url }}">
+        </a>
+        {% else %}
+            <img src="{{ flatblock.get_thumb_url }}">
+        {% endif %}
+    </div>
     {% endeditable %}
 {% endblock %}

@@ -1,7 +1,6 @@
 {% load mezzanine_tags %}
 
 
-{% if flatblock.content %}
 {% if not flatblock.login_required or flatblock.login_required and user.is_authenticated %}
 <div class="flatblock block-{{ flatblock.slug }}">
     {% if flatblock.title and flatblock.show_title %}
@@ -15,5 +14,4 @@
     {% endeditable %}
     {% endblock %}
 </div>
-{% endif %}
 {% endif %}
