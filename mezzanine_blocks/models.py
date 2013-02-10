@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.cache import cache
 from django.utils.translation import ugettext_lazy as _
+from mezzanine.conf import settings
 from mezzanine.core.models import Slugged, RichText
 from mezzanine.core.fields import FileField, RichTextField
 from mezzanine.core.templatetags.mezzanine_tags import thumbnail
@@ -10,23 +11,22 @@ from .category import BlockCategory
 
 class BaseBlock(Slugged):
     """Base Block
-    """    
+    """
     category = models.ForeignKey(BlockCategory, null=True, blank=True)
     login_required = models.BooleanField(_("Login required"), help_text=_("If checked, only logged in users can view this page"), default=False)
-    show_title     = models.BooleanField(_("Show title"), help_text=_("If checked, show block title"), default=False)
-
+    show_title = models.BooleanField(_("Show title"), help_text=_("If checked, show block title"), default=False)
 
     def save(self, *args, **kwargs):
         super(BaseBlock, self).save(*args, **kwargs)
         cache.delete('%s%s' % ('mezzanine_blocks', self.slug))
 
     class Meta:
-        abstract = True  
+        abstract = True
 
-        
+
 class Block(BaseBlock):
     """Content Block
-    """        
+    """
     content = models.TextField(blank=True)
 
     class Meta:
@@ -36,7 +36,7 @@ class Block(BaseBlock):
 
 class RichBlock(BaseBlock, RichText):
     """RichText Block
-    """       
+    """
     class Meta:
         verbose_name = _('Rich Block')
         verbose_name_plural = _('Rich Blocks')
@@ -44,11 +44,11 @@ class RichBlock(BaseBlock, RichText):
 
 class ImageBlock(BaseBlock, AdminThumbMixin):
     """An image Block
-    """          
+    """
     image = FileField(verbose_name=_("Image"), upload_to="images", format="Image", max_length=255, null=True, blank=True)
-    url = models.URLField(_("External URL"), max_length=255, blank=True, null=True, help_text=_("Optional URL."))
     description = RichTextField(_("Description"), blank=True, null=True)
-    
+    url = models.URLField(_("External URL"), max_length=255, blank=True, null=True, help_text=_("Optional URL."))
+
     height = models.IntegerField(_("Height"), default=100, help_text=_("Height in pixels."))
     width = models.IntegerField(_("Width"), default=200, help_text=_("Width in pixels."))
     quality = models.IntegerField(_("Quality"), default=80)
@@ -60,7 +60,13 @@ class ImageBlock(BaseBlock, AdminThumbMixin):
         verbose_name_plural = _('Image Blocks')
 
     def get_url(self):
-        return self.url or "#"
+        return self.url
 
     def get_thumb_url(self):
-        return thumbnail(thumb, self.width, self.height, self.quality)
+        thumb = None
+        if self.admin_thumb_field:
+            thumb = getattr(self, self.admin_thumb_field, None)
+        if thumb is None:
+            return ""
+
+        return "%s%s" % (settings.MEDIA_URL, thumbnail(thumb, self.width, self.height, self.quality))
