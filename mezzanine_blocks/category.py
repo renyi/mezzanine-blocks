@@ -17,9 +17,10 @@ try:
 
         class MPTTMeta:
             order_insertion_by = ['title']
+
 except ImportError:
     class BaseBlockCategory(Slugged):
-        """Base Category 
+        """Base Category
         """
         class Meta:
             abstract = True
@@ -27,8 +28,7 @@ except ImportError:
 
 class BlockCategory(BaseBlockCategory):
     """Block Category
-    """    
+    """
     class Meta:
         verbose_name = _('Block category')
         verbose_name_plural = _('Block categories')
-          
