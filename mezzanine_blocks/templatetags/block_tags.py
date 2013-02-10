@@ -3,11 +3,15 @@ from django import template
 from django.template import loader
 from django.db import models
 from django.core.cache import cache
+from mezzanine.conf import settings
 from mezzanine.utils.urls import slugify
 from mezzanine_blocks.models import Block, RichBlock, ImageBlock
 
+
 register = template.Library()
 logger = logging.getLogger(__name__)
+
+
 
 class BasicFlatBlockWrapper(object):
     def prepare(self, parser, token):
@@ -84,6 +88,7 @@ do_image_flatblock = ImageFlatBlockWrapper()
 class FlatBlockNode(template.Node):
     def __init__(self, slug, is_variable, cache_time=0, with_template=True,
             template_name=None, tpl_is_variable=False, is_rich=False, is_image=False):
+
         if template_name is None:
             if is_image:
                 self.template_name = 'mezzanine_blocks/image_block.html'
@@ -110,6 +115,10 @@ class FlatBlockNode(template.Node):
             real_template = self.template_name.resolve(context)
         else:
             real_template = self.template_name
+
+        real_title = real_slug
+        real_slug = slugify(real_slug)
+
         # Eventually we want to pass the whole context to the template so that
         # users have the maximum of flexibility of what to do in there.
         if self.with_template:
@@ -118,38 +127,23 @@ class FlatBlockNode(template.Node):
         try:
             flatblock = None
             if self.cache_time != 0:
-                cache_key = 'mezzanine_blocks.' + real_slug
+                cache_key = settings.MEZZANINE_BLOCKS_CACHE_PREFIX + real_slug
                 flatblock = cache.get(cache_key)
-            if flatblock is None:
 
-                # if flatblock's slug is hard-coded in template then it is
-                # safe and convenient to auto-create block if it doesn't exist.
-                # This behaviour can be configured using the
-                # FLATBLOCKS_AUTOCREATE_STATIC_BLOCKS setting
+            if flatblock is None:
                 if self.is_rich:
-                    if self.is_variable:
-                        flatblock = RichBlock.objects.get(slug=real_slug)
-                    else:
-                        flatblock, _ = RichBlock.objects.get_or_create(
-                                          slug=slugify(real_slug),
-                                          defaults = {'title': real_slug}
-                                       )
+                    _klass = RichBlock
+
                 elif self.is_image:
-                    if self.is_variable:
-                        flatblock = ImageBlock.objects.get(slug=real_slug)
-                    else:
-                        flatblock, _ = ImageBlock.objects.get_or_create(
-                                          slug=slugify(real_slug),
-                                          defaults = {'title': real_slug}
-                                       )                        
+                    _klass = ImageBlock
+
                 else:
-                    if self.is_variable:
-                        flatblock = Block.objects.get(slug=real_slug)
-                    else:
-                        flatblock, _ = Block.objects.get_or_create(
-                                          slug=slugify(real_slug),
-                                          defaults = {'title': real_slug}
-                                       )
+                    _klass = Block
+
+                flatblock, created = _klass.objects.get_or_create(
+                                  slug=real_slug,
+                                  defaults = {'title': real_title}
+                               )
 
                 if self.cache_time != 0:
                     if self.cache_time is None or self.cache_time == 'None':
@@ -174,4 +168,4 @@ class FlatBlockNode(template.Node):
 
 register.tag('flatblock', do_get_flatblock)
 register.tag('richflatblock', do_rich_flatblock)
-register.tag('imageflatblock', do_rich_flatblock)
+register.tag('imageflatblock', do_image_flatblock)
