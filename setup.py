@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 NAME = 'mezzanine-blocks'
 
-VERSION = '0.1'
+VERSION = '0.9'
 
-DESCRIPTION = """\
+DESCRIPTION = """
 A mezzanine flavored fork of django-flatblocks.
 The goal of this project is to be able to easily create custom blocks of
 text/HTML in the template, and can be editable via admin.
