@@ -4,7 +4,24 @@ A mezzanine flavored fork of [django-flatblocks] [1].
 The goal of this project is to be able to easily create custom blocks of text/HTML
 in the template, and can be editable via admin.
 
-[1]: https://github.com/zerok/django-flatblocks/ "django-flatblocks"
+
+Features
+===================
+1. Raw Text Block, Rich Text Block, Image Block
+2. Multisite support (via Mezzanine's Slugged).
+3. Frontend inline editing.
+4. Categories for easier block management.
+5. Optional MPTT support for categories.
+
+
+Requirements
+============
+Required
+    - [Mezzanine CMS] [2]
+
+Optional
+    - [Django MPTT] [3]
+
 
 Installation
 ============
@@ -16,13 +33,15 @@ Installation
         "mezzanine_blocks",
     )
 
-2. Add "Blocks" menu item to admin menu (Optional):
+2. Add blocks menu item to admin menu (Optional):
 
 >
     ADMIN_MENU_ORDER = (
         ("Content", (
                 "pages.Page",
                 "mezzanine_blocks.Block",
+                "mezzanine_blocks.RichBlock",
+                "mezzanine_blocks.ImageBlock",
                 "blog.BlogPost",
                 "blog.BlogCategory",
                 "generic.ThreadedComment",
@@ -45,6 +64,8 @@ Usage
 
     {% richflatblock "My Awesome HTML Block" %}
 
+    {% imageflatblock "My Image Block" %}
+
 3. You should see the blocks in the admin.
 
 Options
@@ -61,6 +82,28 @@ Options are similar to django-flatblocks.
     {% richflatblock {block} using {tpl_name} %}
     {% richflatblock {block} {timeout} using {tpl_name} %}
 
-Future Enhancements
-===================
-1. Include more mezzanine flavored goodies (front-end editing, multi site, etc. ).
+    {% imageflatblock {block} %}
+    {% imageflatblock {block} {timeout} %}
+    {% imageflatblock {block} using {tpl_name} %}
+    {% imageflatblock {block} {timeout} using {tpl_name} %}
+
+Installation
+============
+Version 0.9
+-----------
+    - Bumped version to 0.9.
+    - Added Image Block.
+    - Added Categories for easier block management (Optional MPTT).
+    - Added frontend inline editing tags to templates.
+    - Bugfix: Problem with slug when block title has whitespace.
+    - Cache key prefix now editable in defaults.py.
+
+Version 0.1
+-----------
+    - Initial Release
+    - RawText block, and RichText block.
+    - Multisite support.
+
+[1]: https://github.com/zerok/django-flatblocks/ "django-flatblocks"
+[2]: http://mezzanine.jupo.org "Mezzanine CMS"
+[3]: https://github.com/django-mptt/django-mptt "Django MPTT"
