@@ -25,24 +25,21 @@ Optional
 
 Installation
 ============
-
 1. Add mezzanine_blocks to your virtualenv or clone the repository :
-
->
+```bash
     pip install git+git://github.com/renyi/mezzanine-blocks.git
-
+```
 
 2. Add "mezzanine_blocks" to INSTALLED_APPS:
-
->
+```python
     INSTALLED_APPS = (
         "...",
         "mezzanine_blocks",
     )
+```
 
 3. Add blocks menu item to admin menu (Optional):
-
->
+```python
     ADMIN_MENU_ORDER = (
         ("Content", (
                 "pages.Page",
@@ -56,8 +53,8 @@ Installation
             )
         ),
     )
-
-4. Run *python manage.py createdb* or *python manage.py syncdb && python manage.py migrate*.
+```
+4. Run `python manage.py createdb` or `python manage.py syncdb && python manage.py migrate`.
 
 Usage
 =====
