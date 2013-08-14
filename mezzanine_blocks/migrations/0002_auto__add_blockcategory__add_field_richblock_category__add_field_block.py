@@ -27,11 +27,7 @@ class Migration(SchemaMigration):
                 ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
                 ('site', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['sites.Site'])),
                 ('title', self.gf('django.db.models.fields.CharField')(max_length=500)),
-                ('slug', self.gf('django.db.models.fields.CharField')(max_length=2000, null=True, blank=True)),
-                ('lft', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-                ('rght', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-                ('tree_id', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-                ('level', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
+                ('slug', self.gf('django.db.models.fields.CharField')(max_length=2000, null=True, blank=True))
             ))
         db.send_create_signal('mezzanine_blocks', ['BlockCategory'])
 
@@ -72,13 +68,9 @@ class Migration(SchemaMigration):
         'mezzanine_blocks.blockcategory': {
             'Meta': {'object_name': 'BlockCategory'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
             'slug': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'null': 'True', 'blank': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
         'mezzanine_blocks.richblock': {
             'Meta': {'object_name': 'RichBlock'},
@@ -102,6 +94,10 @@ class Migration(SchemaMigration):
     try:
         from mptt.models import MPTTModel, TreeForeignKey
         models['mezzanine_blocks.blockcategory']['parent'] =  ('mptt.fields.TreeForeignKey', [], {'blank': 'True', 'related_name': "'child'", 'null': 'True', 'to': "orm['mezzanine_blocks.BlockCategory']"})
+        models['mezzanine_blocks.blockcategory']['level'] = ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+        models['mezzanine_blocks.blockcategory']['lft'] = ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+        models['mezzanine_blocks.blockcategory']['rght'] = ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+        models['mezzanine_blocks.blockcategory']['tree_id'] = ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
     except ImportError:
         pass
 
