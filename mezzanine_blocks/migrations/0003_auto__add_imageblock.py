@@ -45,7 +45,6 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'parent': ('mptt.fields.TreeForeignKey', [], {'blank': 'True', 'related_name': "'child'", 'null': 'True', 'to': "orm['mezzanine_blocks.BlockCategory']"}),
             'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
             'slug': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'null': 'True', 'blank': 'True'}),
@@ -82,5 +81,11 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
+
+    try:
+        from mptt.models import MPTTModel, TreeForeignKey
+        models['mezzanine_blocks.blockcategory']['parent'] =  ('mptt.fields.TreeForeignKey', [], {'blank': 'True', 'related_name': "'child'", 'null': 'True', 'to': "orm['mezzanine_blocks.BlockCategory']"})
+    except ImportError:
+        pass
 
     complete_apps = ['mezzanine_blocks']
