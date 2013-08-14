@@ -58,14 +58,9 @@ class Migration(SchemaMigration):
         'mezzanine_blocks.blockcategory': {
             'Meta': {'object_name': 'BlockCategory'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'parent': ('mptt.fields.TreeForeignKey', [], {'blank': 'True', 'related_name': "'child'", 'null': 'True', 'to': "orm['mezzanine_blocks.BlockCategory']"}),
-            'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
             'site': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['sites.Site']"}),
             'slug': ('django.db.models.fields.CharField', [], {'max_length': '2000', 'null': 'True', 'blank': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
-            'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '500'})
         },
         'mezzanine_blocks.imageblock': {
             'Meta': {'object_name': 'ImageBlock'},
@@ -101,5 +96,15 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
+
+    try:
+        from mptt.models import MPTTModel, TreeForeignKey
+        models['mezzanine_blocks.blockcategory']['parent'] =  ('mptt.fields.TreeForeignKey', [], {'blank': 'True', 'related_name': "'child'", 'null': 'True', 'to': "orm['mezzanine_blocks.BlockCategory']"})
+        models['mezzanine_blocks.blockcategory']['level'] = ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+        models['mezzanine_blocks.blockcategory']['lft'] = ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+        models['mezzanine_blocks.blockcategory']['rght'] = ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+        models['mezzanine_blocks.blockcategory']['tree_id'] = ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
+    except ImportError:
+        pass
 
     complete_apps = ['mezzanine_blocks']

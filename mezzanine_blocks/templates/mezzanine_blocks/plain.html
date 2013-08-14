@@ -1,0 +1,8 @@
+{% load mezzanine_tags %}
+
+
+{% if not flatblock.login_required or flatblock.login_required and user.is_authenticated %}
+{% editable flatblock.content %}
+    {{ flatblock.content|richtext_filter|safe }}
+{% endeditable %}
+{% endif %}
