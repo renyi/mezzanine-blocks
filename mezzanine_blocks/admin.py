@@ -1,3 +1,5 @@
+from functools import partial
+
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from mezzanine.conf import settings
@@ -9,16 +11,6 @@ class BlockCategoryAdmin(admin.ModelAdmin):
     list_display = ('title', )
     search_fields = ('title', )
     fields = ("title", )
-
-
-    def in_menu(self):
-        """
-        Hide from the admin menu unless explicitly set in ``ADMIN_MENU_ORDER``.
-        """
-        for (name, items) in settings.ADMIN_MENU_ORDER:
-            if "mezzanine_blocks.BlockCategory" in items:
-                return True
-        return False
 
 
 class BlockAdmin(admin.ModelAdmin):
@@ -37,15 +29,6 @@ class BlockAdmin(admin.ModelAdmin):
         }),
     )
 
-    def in_menu(self):
-        """
-        Hide from the admin menu unless explicitly set in ``ADMIN_MENU_ORDER``.
-        """
-        for (name, items) in settings.ADMIN_MENU_ORDER:
-            if "mezzanine_blocks.Block" in items:
-                return True
-        return False
-
 
 class RichBlockAdmin(admin.ModelAdmin):
     ordering = ('title', 'category')
@@ -62,15 +45,6 @@ class RichBlockAdmin(admin.ModelAdmin):
             "classes": ("collapse-closed",)
         }),
     )
-
-    def in_menu(self):
-        """
-        Hide from the admin menu unless explicitly set in ``ADMIN_MENU_ORDER``.
-        """
-        for (name, items) in settings.ADMIN_MENU_ORDER:
-            if "mezzanine_blocks.RichBlock" in items:
-                return True
-        return False
 
 
 class ImageBlockAdmin(admin.ModelAdmin):
@@ -90,14 +64,24 @@ class ImageBlockAdmin(admin.ModelAdmin):
         }),
     )
 
-    def in_menu(self):
-        """
-        Hide from the admin menu unless explicitly set in ``ADMIN_MENU_ORDER``.
-        """
-        for (name, items) in settings.ADMIN_MENU_ORDER:
-            if "mezzanine_blocks.ImageBlock" in items:
+
+def in_menu(app_name):
+    """
+    Hide from the admin menu unless explicitly set in ``ADMIN_MENU_ORDER``.
+    """
+    for category, items in settings.ADMIN_MENU_ORDER:
+        for item in items:
+            if isinstance(item, (tuple, list)):
+                if app_name in item:
+                    return True
+            elif item == app_name:
                 return True
-        return False
+
+
+BlockCategoryAdmin.in_menu = partial(in_menu, "mezzanine_blocks.BlockCategory")
+BlockAdmin.in_menu = partial(in_menu, "mezzanine_blocks.Block")
+RichBlockAdmin.in_menu = partial(in_menu, "mezzanine_blocks.RichBlock")
+ImageBlockAdmin.in_menu = partial(in_menu, "mezzanine_blocks.ImageBlock")
 
 admin.site.register(BlockCategory, BlockCategoryAdmin)
 admin.site.register(Block, BlockAdmin)
