@@ -3,6 +3,6 @@
 
 {% if not flatblock.login_required or flatblock.login_required and user.is_authenticated %}
 {% editable flatblock.content %}
-    {{ flatblock.content|richtext_filter|safe }}
+    {{ flatblock.content|richtext_filters|safe }}
 {% endeditable %}
 {% endif %}

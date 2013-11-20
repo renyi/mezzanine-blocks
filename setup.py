@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 NAME = 'mezzanine-blocks'
 
-VERSION = '0.9'
+VERSION = '0.9.1'
 
 DESCRIPTION = """
 A mezzanine flavored fork of django-flatblocks.
