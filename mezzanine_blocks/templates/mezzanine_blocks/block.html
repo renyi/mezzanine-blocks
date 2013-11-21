@@ -10,7 +10,7 @@
     {% endif %}
     {% block block_content %}
     {% editable flatblock.content %}
-    <div class="content">{{ flatblock.content|richtext_filter|safe }}</div>
+    <div class="content">{{ flatblock.content|richtext_filters|safe }}</div>
     {% endeditable %}
     {% endblock %}
 </div>
