@@ -3,7 +3,7 @@ from functools import partial
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from mezzanine.conf import settings
-from models import BlockCategory, Block, RichBlock, ImageBlock
+from .models import BlockCategory, Block, RichBlock, ImageBlock
 
 
 class BlockCategoryAdmin(admin.ModelAdmin):
