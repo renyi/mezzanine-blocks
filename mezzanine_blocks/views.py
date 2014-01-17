@@ -2,8 +2,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
 from django.utils.translation import ugettext as _
-from models import Block
-from forms import BlockForm
+from .models import Block
+from .forms import BlockForm
 
 def edit(request, pk, modelform_class=BlockForm, permission_check=None, template_name='mezzanine_blocks/edit.html', success_url=None):
     """
