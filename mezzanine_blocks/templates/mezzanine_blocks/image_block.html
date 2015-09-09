@@ -7,10 +7,10 @@
     <div class="content-image">
         {% if flatblock.get_url %}
         <a href="{{ flatblock.get_url }}" rel="nofollow">
-            <img src="{{ STATIC_URL }}{{ flatblock.get_thumb_url }}">
+            <img src="{{ MEDIA_URL }}{{ flatblock.get_thumb_url }}">
         </a>
         {% else %}
-            <img src="{{ STATIC_URL }}{{ flatblock.get_thumb_url }}">
+            <img src="{{ MEDIA_URL }}{{ flatblock.get_thumb_url }}">
         {% endif %}
     </div>
     {% endeditable %}
