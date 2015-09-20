@@ -3,6 +3,8 @@ from functools import partial
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from mezzanine.conf import settings
+from modeltranslation.admin import TranslationAdmin
+
 from .models import BlockCategory, Block, RichBlock, ImageBlock
 
 
@@ -13,7 +15,7 @@ class BlockCategoryAdmin(admin.ModelAdmin):
     fields = ("title", )
 
 
-class BlockAdmin(admin.ModelAdmin):
+class BlockAdmin(TranslationAdmin):
     ordering = ('title', 'category')
     list_display = ('title', 'category', 'login_required', 'show_title')
     list_editable = ('login_required', 'show_title', 'category')
@@ -30,7 +32,7 @@ class BlockAdmin(admin.ModelAdmin):
     )
 
 
-class RichBlockAdmin(admin.ModelAdmin):
+class RichBlockAdmin(TranslationAdmin):
     ordering = ('title', 'category')
     list_display = ('title', 'category', 'login_required', 'show_title')
     list_editable = ('login_required', 'show_title', 'category')
