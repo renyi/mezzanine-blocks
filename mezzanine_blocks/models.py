@@ -4,7 +4,6 @@ from django.utils.translation import ugettext_lazy as _
 from mezzanine.conf import settings
 from mezzanine.core.models import Slugged, RichText
 from mezzanine.core.fields import FileField, RichTextField
-from mezzanine.core.templatetags.mezzanine_tags import thumbnail
 from mezzanine.utils.models import AdminThumbMixin
 from .category import BlockCategory
 
@@ -63,6 +62,7 @@ class ImageBlock(BaseBlock, AdminThumbMixin):
         return self.url
 
     def get_thumb_url(self):
+        from mezzanine.core.templatetags.mezzanine_tags import thumbnail
         thumb = None
         if self.admin_thumb_field:
             thumb = getattr(self, self.admin_thumb_field, None)

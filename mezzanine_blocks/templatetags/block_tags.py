@@ -122,8 +122,8 @@ class FlatBlockNode(template.Node):
         # Eventually we want to pass the whole context to the template so that
         # users have the maximum of flexibility of what to do in there.
         if self.with_template:
-            new_ctx = template.Context({})
-            new_ctx.update(context)
+            new_ctx = {}
+            new_ctx.update(context.flatten())
         try:
             flatblock = None
             if self.cache_time != 0:
