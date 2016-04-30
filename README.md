@@ -12,6 +12,7 @@ Features
 3. Frontend inline editing.
 4. Categories for easier block management.
 5. Optional MPTT support for categories.
+6. Optional unlimited passed arguments in the template
 
 
 Requirements
@@ -27,7 +28,7 @@ Installation
 ============
 1. Add mezzanine_blocks to your virtualenv or clone the repository :
 ```bash
-    pip install git+git://github.com/renyi/mezzanine-blocks.git
+    pip install git+git://github.com/Cajoline/mezzanine-blocks.git
 ```
 
 2. Add "mezzanine_blocks" to INSTALLED_APPS:
@@ -79,20 +80,31 @@ Options are similar to django-flatblocks.
     {% flatblock {block} %}
     {% flatblock {block} {timeout} %}
     {% flatblock {block} using {tpl_name} %}
+    {% flatblock {block} using {tpl_name} {passed_args} %}
     {% flatblock {block} {timeout} using {tpl_name} %}
+    {% flatblock {block} {timeout} using {tpl_name} {passed_args} %}
 
     {% richflatblock {block} %}
     {% richflatblock {block} {timeout} %}
     {% richflatblock {block} using {tpl_name} %}
+    {% richflatblock {block} using {tpl_name} {passed_args} %}
     {% richflatblock {block} {timeout} using {tpl_name} %}
+    {% richflatblock {block} {timeout} using {tpl_name} {passed_args} %}
 
     {% imageflatblock {block} %}
     {% imageflatblock {block} {timeout} %}
     {% imageflatblock {block} using {tpl_name} %}
+    {% imageflatblock {block} using {tpl_name} {passed_args} %}
     {% imageflatblock {block} {timeout} using {tpl_name} %}
+    {% imageflatblock {block} {timeout} using {tpl_name} {passed_args} %}
 
 Installation
 ============
+Version 0.9.4
+-----------
+    - Bumped version to 0.9.4
+    - Added unlimited passed arguments in the template.
+
 Version 0.9
 -----------
     - Bumped version to 0.9.
