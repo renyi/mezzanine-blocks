@@ -44,15 +44,15 @@ class BasicFlatBlockWrapper(object):
         elif num_args == 2:
             # block, "using", tpl_name
             self.tpl_name = args[1]
-        elif num_args == 3:
-            # block, timeout, "using", tpl_name
-            self.cache_time = args[0]
-            self.tpl_name = args[2]
-        elif num_args >= 4:
+        elif num_args >= 3:
             # block, timeout, "using", tpl_name, passed_vars
-            self.cache_time = args[0]
-            self.tpl_name = args[2]
-            self.passed_args = args[3:]
+            if not args[0] == "using":
+                self.cache_time = args[0]
+                self.tpl_name = args[2]
+                self.passed_args = args[3:]
+            else:
+                self.tpl_name = args[1]
+                self.passed_args = args[2:]
         else:
             raise template.TemplateSyntaxError("%r tag should have between 1 and 4 arguments" % (tokens[0],))
         # Check to see if the slug is properly double/single quoted

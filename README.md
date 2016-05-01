@@ -98,8 +98,26 @@ Options are similar to django-flatblocks.
     {% imageflatblock {block} {timeout} using {tpl_name} %}
     {% imageflatblock {block} {timeout} using {tpl_name} {passed_args} %}
 
+If you use {passed_args} to recover the arguments, add the tag {{passed_args}} in your template, if various
+arguments exists, add loop on {{passed_args}} exemple:
+
+{% for args in passed_args %}
+    {{args}}
+{% endfor%}
+
+or directly by index:
+{{passed_args.0}}
+{{passed_args.1}}
+etc.
+
+
 Installation
 ============
+Version 0.9.5
+-----------
+    - Bumped version to 0.9.5
+    - Fixed error if caching args not exist
+
 Version 0.9.4
 -----------
     - Bumped version to 0.9.4
