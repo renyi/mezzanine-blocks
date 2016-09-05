@@ -13,6 +13,7 @@ Features
 4. Categories for easier block management.
 5. Optional MPTT support for categories.
 6. Optional unlimited passed arguments in the template
+7. Compatibility with modeltranslation.
 
 
 Requirements
@@ -113,6 +114,10 @@ etc.
 
 Installation
 ============
+Version 0.9.6
+-----------
+    - Bumped version
+    - Compatibility with modeltranslation
 Version 0.9.5
 -----------
     - Bumped version to 0.9.5
