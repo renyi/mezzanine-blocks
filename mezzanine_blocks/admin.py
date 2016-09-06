@@ -3,17 +3,19 @@ from functools import partial
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from mezzanine.conf import settings
+from mezzanine.core.admin import BaseTranslationModelAdmin
+
 from .models import BlockCategory, Block, RichBlock, ImageBlock
 
 
 class BlockCategoryAdmin(admin.ModelAdmin):
-    ordering = ('title', )
-    list_display = ('title', )
-    search_fields = ('title', )
-    fields = ("title", )
+    ordering = ('title',)
+    list_display = ('title',)
+    search_fields = ('title',)
+    fields = ("title",)
 
 
-class BlockAdmin(admin.ModelAdmin):
+class BlockAdmin(BaseTranslationModelAdmin):
     ordering = ('title', 'category')
     list_display = ('title', 'category', 'login_required', 'show_title')
     list_editable = ('login_required', 'show_title', 'category')
@@ -24,13 +26,13 @@ class BlockAdmin(admin.ModelAdmin):
             "fields": ["title", "content", "category"],
         }),
         (_("Advanced data"), {
-            "fields": ['login_required', 'show_title', "slug" ],
+            "fields": ['login_required', 'show_title', "slug"],
             "classes": ("collapse-closed",)
         }),
     )
 
 
-class RichBlockAdmin(admin.ModelAdmin):
+class RichBlockAdmin(BaseTranslationModelAdmin):
     ordering = ('title', 'category')
     list_display = ('title', 'category', 'login_required', 'show_title')
     list_editable = ('login_required', 'show_title', 'category')
@@ -41,13 +43,13 @@ class RichBlockAdmin(admin.ModelAdmin):
             "fields": ["title", "content", "category"],
         }),
         (_("Advanced data"), {
-            "fields": ['login_required', 'show_title', "slug" ],
+            "fields": ['login_required', 'show_title', "slug"],
             "classes": ("collapse-closed",)
         }),
     )
 
 
-class ImageBlockAdmin(admin.ModelAdmin):
+class ImageBlockAdmin(BaseTranslationModelAdmin):
     ordering = ('title', 'category')
     list_display = ('admin_thumb', 'title', 'category', 'height', 'width', 'quality', 'login_required', 'show_title')
     list_display_links = ('admin_thumb', 'title')
@@ -59,7 +61,7 @@ class ImageBlockAdmin(admin.ModelAdmin):
             "fields": ["title", "description", "category", "image", 'url'],
         }),
         (_("Advanced data"), {
-            "fields": [('height', 'width', 'quality'), 'login_required', 'show_title', "slug" ],
+            "fields": [('height', 'width', 'quality'), 'login_required', 'show_title', "slug"],
             "classes": ("collapse-closed",)
         }),
     )

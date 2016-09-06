@@ -21,7 +21,9 @@ class BasicFlatBlockWrapper(object):
             {% flatblock {block} %}
             {% flatblock {block} {timeout} %}
             {% flatblock {block} using {tpl_name} %}
+            {% flatblock {block} using {tpl_name} {passed_args} %}
             {% flatblock {block} {timeout} using {tpl_name} %}
+            {% flatblock {block} {timeout} using {tpl_name} {passed_args} %}
         """
         tokens = token.split_contents()
         self.is_variable = False
@@ -29,6 +31,7 @@ class BasicFlatBlockWrapper(object):
         self.slug = None
         self.cache_time = 0
         self.tpl_name = None
+        self.passed_args = None
         tag_name, self.slug, args = tokens[0], tokens[1], tokens[2:]
         num_args = len(args)
         if num_args == 0:
@@ -41,10 +44,15 @@ class BasicFlatBlockWrapper(object):
         elif num_args == 2:
             # block, "using", tpl_name
             self.tpl_name = args[1]
-        elif num_args == 3:
-            # block, timeout, "using", tpl_name
-            self.cache_time = args[0]
-            self.tpl_name = args[2]
+        elif num_args >= 3:
+            # block, timeout, "using", tpl_name, passed_vars
+            if not args[0] == "using":
+                self.cache_time = args[0]
+                self.tpl_name = args[2]
+                self.passed_args = args[3:]
+            else:
+                self.tpl_name = args[1]
+                self.passed_args = args[2:]
         else:
             raise template.TemplateSyntaxError("%r tag should have between 1 and 4 arguments" % (tokens[0],))
         # Check to see if the slug is properly double/single quoted
@@ -87,7 +95,7 @@ do_image_flatblock = ImageFlatBlockWrapper()
 
 class FlatBlockNode(template.Node):
     def __init__(self, slug, is_variable, cache_time=0, with_template=True,
-            template_name=None, tpl_is_variable=False, is_rich=False, is_image=False):
+            template_name=None, tpl_is_variable=False, is_rich=False, is_image=False, passed_arg=False):
 
         if template_name is None:
             if is_image:
@@ -105,6 +113,7 @@ class FlatBlockNode(template.Node):
         self.with_template = with_template
         self.is_rich = is_rich
         self.is_image = is_image
+        self.passed_args = passed_arg
 
     def render(self, context):
         if self.is_variable:
@@ -115,6 +124,9 @@ class FlatBlockNode(template.Node):
             real_template = self.template_name.resolve(context)
         else:
             real_template = self.template_name
+        # Add passed_args in the context
+        if self.passed_args:
+            context['passed_args'] = self.passed_args
 
         real_title = real_slug
         real_slug = slugify(real_slug)
@@ -122,8 +134,8 @@ class FlatBlockNode(template.Node):
         # Eventually we want to pass the whole context to the template so that
         # users have the maximum of flexibility of what to do in there.
         if self.with_template:
-            new_ctx = template.Context({})
-            new_ctx.update(context)
+            new_ctx = {}
+            new_ctx.update(context.flatten())
         try:
             flatblock = None
             if self.cache_time != 0:

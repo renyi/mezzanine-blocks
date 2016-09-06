@@ -12,6 +12,8 @@ Features
 3. Frontend inline editing.
 4. Categories for easier block management.
 5. Optional MPTT support for categories.
+6. Optional unlimited passed arguments in the template
+7. Compatibility with modeltranslation.
 
 
 Requirements
@@ -27,7 +29,7 @@ Installation
 ============
 1. Add mezzanine_blocks to your virtualenv or clone the repository :
 ```bash
-    pip install git+git://github.com/renyi/mezzanine-blocks.git
+    pip install git+git://github.com/Cajoline/mezzanine-blocks.git
 ```
 
 2. Add "mezzanine_blocks" to INSTALLED_APPS:
@@ -79,20 +81,53 @@ Options are similar to django-flatblocks.
     {% flatblock {block} %}
     {% flatblock {block} {timeout} %}
     {% flatblock {block} using {tpl_name} %}
+    {% flatblock {block} using {tpl_name} {passed_args} %}
     {% flatblock {block} {timeout} using {tpl_name} %}
+    {% flatblock {block} {timeout} using {tpl_name} {passed_args} %}
 
     {% richflatblock {block} %}
     {% richflatblock {block} {timeout} %}
     {% richflatblock {block} using {tpl_name} %}
+    {% richflatblock {block} using {tpl_name} {passed_args} %}
     {% richflatblock {block} {timeout} using {tpl_name} %}
+    {% richflatblock {block} {timeout} using {tpl_name} {passed_args} %}
 
     {% imageflatblock {block} %}
     {% imageflatblock {block} {timeout} %}
     {% imageflatblock {block} using {tpl_name} %}
+    {% imageflatblock {block} using {tpl_name} {passed_args} %}
     {% imageflatblock {block} {timeout} using {tpl_name} %}
+    {% imageflatblock {block} {timeout} using {tpl_name} {passed_args} %}
+
+If you use {passed_args} to recover the arguments, add the tag {{passed_args}} in your template, if various
+arguments exists, add loop on {{passed_args}} exemple:
+
+{% for args in passed_args %}
+    {{args}}
+{% endfor%}
+
+or directly by index:
+{{passed_args.0}}
+{{passed_args.1}}
+etc.
+
 
 Installation
 ============
+Version 0.9.6
+-----------
+    - Bumped version
+    - Compatibility with modeltranslation
+Version 0.9.5
+-----------
+    - Bumped version to 0.9.5
+    - Fixed error if caching args not exist
+
+Version 0.9.4
+-----------
+    - Bumped version to 0.9.4
+    - Added unlimited passed arguments in the template.
+
 Version 0.9
 -----------
     - Bumped version to 0.9.
