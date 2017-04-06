@@ -73,21 +73,21 @@ class BasicFlatBlockWrapper(object):
         self.prepare(parser, token)
         return FlatBlockNode(self.slug, self.is_variable, self.cache_time,
                 template_name=self.tpl_name,
-                tpl_is_variable=self.tpl_is_variable)
+                tpl_is_variable=self.tpl_is_variable, passed_arg=self.passed_args)
 
 class RichFlatBlockWrapper(BasicFlatBlockWrapper):
     def __call__(self, parser, token):
         self.prepare(parser, token)
         return FlatBlockNode(self.slug, self.is_variable, self.cache_time,
                 template_name=self.tpl_name,
-                tpl_is_variable=self.tpl_is_variable, is_rich=True)
+                tpl_is_variable=self.tpl_is_variable, is_rich=True, passed_arg=self.passed_args)
 
 class ImageFlatBlockWrapper(BasicFlatBlockWrapper):
     def __call__(self, parser, token):
         self.prepare(parser, token)
         return FlatBlockNode(self.slug, self.is_variable, self.cache_time,
                 template_name=self.tpl_name,
-                tpl_is_variable=self.tpl_is_variable, is_image=True)
+                tpl_is_variable=self.tpl_is_variable, is_image=True, passed_arg=self.passed_args)
 
 do_get_flatblock = BasicFlatBlockWrapper()
 do_rich_flatblock = RichFlatBlockWrapper()
