@@ -11,7 +11,7 @@ from .category import BlockCategory
 class BaseBlock(Slugged):
     """Base Block
     """
-    category = models.ForeignKey(BlockCategory, null=True, blank=True)
+    category = models.ForeignKey(BlockCategory, null=True, blank=True, on_delete=models.CASCADE)
     login_required = models.BooleanField(_("Login required"), help_text=_("If checked, only logged in users can view this page"), default=False)
     show_title = models.BooleanField(_("Show title"), help_text=_("If checked, show block title"), default=False)
 
