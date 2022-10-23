@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from .models import Block
 from .forms import BlockForm
 

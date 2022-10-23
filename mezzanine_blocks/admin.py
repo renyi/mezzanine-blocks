@@ -1,6 +1,6 @@
 from functools import partial
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from mezzanine.conf import settings
 from mezzanine.core.admin import BaseTranslationModelAdmin
